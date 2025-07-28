@@ -1,46 +1,27 @@
-```markdown
 # Research Integrity Network
 
-## Agentic Research Integrity Pipeline
+## Overview  
+The **Research Integrity Network** is a modular, agentic system built in Python that helps researchers analyze new claims in real time. Simply upload a PDF research paper or paste in a research claim, and the system instantly searches the web for related and contradictory evidence, traces the downstream impact of those findings, and synthesizes a clear, actionable summary. The tool highlights where the scientific field may need to adapt and suggests concrete next steps—streamlining research review, critical discussion, and knowledge synthesis.
 
-Analyze new research claims, find contradictions in the current literature, trace their potential downstream impact, and receive a concise synthesis of actionable next steps—all in one interactive interface. Perfect for researchers evaluating new findings or building agentic AI systems for scientific discovery.
+## Setup
 
----
-
-## Quick Start
-
-1. **Clone this repository**
-2. **Install dependencies:**  
-   ```
-   pip install streamlit PyPDF2 openai
-   ```
-3. **Set your Perplexity API key** in the script or as an environment variable
-4. **Run the app:**  
-   ```
-   streamlit run streamlit_app.py
-   ```
-5. **Open the provided URL** and upload a research PDF or paste a claim
-
----
+1. **Clone the repository** or download the project files.
+2. **Install dependencies** by running: `pip install streamlit PyPDF2 openai`
+3. **Set your Perplexity API key**: Edit your script or set the environment variable with your API key.
+4. **Launch the app**: `streamlit run streamlit_app.py`
+5. **Open** the provided URL in your browser to access the app.
 
 ## How It Works
 
-- **Upload a paper** or **enter a research claim** to investigate
-- The system uses real-time web search to **find papers that may contradict your claim**
-- For each significant paper found, it **maps out the discussion or impact** by searching for follow-up articles, blog posts, and discussions
-- **Synthesizes clear, direct advice** for researchers—highlighting major tensions in the field and suggesting 2–3 focused next steps for future research
+- **Upload a research paper (PDF)** or **paste a research claim**.
+- The system **searches the web** for papers, analyses, and discussions that support, contradict, or respond to your claim.
+- For each relevant result, it **maps the citation and discussion cascade**, showing how ideas have spread and evolved.
+- Finally, it **synthesizes a research briefing**—clearly highlighting key conflicts, gaps, and actionable insights for researchers.
+- **Easy cloud deployment** (compatible with Brev, NVIDIA, Jupyter) and ready for live demos.
 
----
+## License
 
-## Deployment & Sharing
+MIT
 
-**Ready for cloud (Brev, NVIDIA, Jupyter), hackathon demos, and team collaboration.**  
-**License:** MIT  
-**Questions?** Open an issue or contact the author.
-
----
-
+**Questions?** Open an issue.  
 **Good luck, and happy researching!**
-```
-
-**Paste this into your repository’s `README.md`** for a clear, compelling, and concise project introduction. If you want to add a technical overview, code structure, or screenshot instructions, just say so and I’ll append them here!

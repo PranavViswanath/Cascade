@@ -1,103 +1,46 @@
 ```markdown
 # Research Integrity Network
 
-A modular, agentic system to detect when new research findings contradict established work, analyze the potential impact on future research, and synthesize clear, actionable directions for researchers. Built with Streamlit, Perplexity API, and ready for cloud deployment on NVIDIA GPUs.
+## Agentic Research Integrity Pipeline
+
+Analyze new research claims, find contradictions in the current literature, trace their potential downstream impact, and receive a concise synthesis of actionable next steps—all in one interactive interface. Perfect for researchers evaluating new findings or building agentic AI systems for scientific discovery.
 
 ---
 
-## ⚡ **Quick Start**
+## Quick Start
 
-1. **Clone this repository**:
-   ```
-   git clone https://github.com/YOURUSERNAME/research-integrity-network.git
-   cd research-integrity-network
-   ```
-2. **Install dependencies**:
+1. **Clone this repository**
+2. **Install dependencies:**  
    ```
    pip install streamlit PyPDF2 openai
    ```
-3. **Set your Perplexity API key** in the `agents/` files, or use environment variables.
-4. **Run the demo**:
+3. **Set your Perplexity API key** in the script or as an environment variable
+4. **Run the app:**  
    ```
    streamlit run streamlit_app.py
    ```
-5. **Open your browser** to the provided local URL (typically `http://localhost:8501`).
+5. **Open the provided URL** and upload a research PDF or paste a claim
 
 ---
 
-## 🏗 **Project Structure**
+## How It Works
 
-```
-research-integrity-network/
-├── agents/
-│   ├── contradiction_detector.py    # Live web search for contradictory research
-│   ├── citation_propagator.py       # Maps downstream discussion/impact
-│   └── synthesis_agent.py           # Generates actionable research advice
-├── streamlit_app.py                 # User interface for upload/analysis
-└── README.md
-```
+- **Upload a paper** or **enter a research claim** to investigate
+- The system uses real-time web search to **find papers that may contradict your claim**
+- For each significant paper found, it **maps out the discussion or impact** by searching for follow-up articles, blog posts, and discussions
+- **Synthesizes clear, direct advice** for researchers—highlighting major tensions in the field and suggesting 2–3 focused next steps for future research
 
 ---
 
-## 🔍 **How It Works**
+## Deployment & Sharing
 
-**1. Upload or Enter a Claim**  
-Users can either paste a research claim or upload a PDF (e.g., a new preprint). The system extracts the main text and treats it as the claim to analyze.
-
-**2. Detect Contradictions**  
-Using the Perplexity API, the system searches the web for academic papers, articles, and discussions that directly address or contradict the uploaded claim. This is handled by `contradiction_detector.py`.
-
-**3. Map Citation Impact**  
-For each contradicted paper, the system attempts to find follow-up papers, articles, or discussions that cite or respond to it. This “citation cascade” helps researchers see where a new finding might ripple through the literature. Handled by `citation_propagator.py`.
-
-**4. Synthesize Actionable Advice**  
-Instead of a simple ranked list, the system generates a concise, direct narrative for the researcher:  
-- **Summarizes** how the new claim interacts with prior work  
-- **Highlights** key tensions or uncertainties in the field  
-- **Recommends** 2–3 specific, concrete research directions  
-All in clear, non-technical language. This is handled by `synthesis_agent.py`.
-
-**5. Output**  
-The researcher sees:  
-- **Contradicted papers** and brief excerpts  
-- **Relevant follow-up discussions** (if any)  
-- **A research briefing**—clear advice on what to do next
+**Ready for cloud (Brev, NVIDIA, Jupyter), hackathon demos, and team collaboration.**  
+**License:** MIT  
+**Questions?** Open an issue or contact the author.
 
 ---
 
-## 🚀 **Deployment**
-
-**For hackathons or cloud demos** (e.g., Brev, NVIDIA Launchable), use the included bash script to automate environment setup.  
-- **Expose port 8501** for the Streamlit UI  
-- **Script** installs dependencies, clones the repo, and launches the app
-
----
-
-## 💡 **Demo Walkthrough**
-
-1. **Launch the app** and upload a PDF (e.g., the Apple paper on LLM reasoning limitations) or enter a claim.
-2. **Watch** as the system surfaces contradictory papers and maps potential impact.
-3. **Read** the synthesized research briefing, which directly advises you on how your work might need to adapt—and what to explore next.
-4. **Share** the live demo URL with judges or collaborators.
-
----
-
-## 🤖 **Agentic Architecture**
-
-- **Modular Python agents** for contradiction detection, impact propagation, and synthesis.
-- **Live, web-powered reasoning**—no static corpus, just real-time research synthesis.
-- **Ready for orchestration** (e.g., NVIDIA NeMo Agent Toolkit) as individual tools.
-- **Streamlit UI** for quick, visually clear demo.
-
----
-
-## 📜 **License**
-
-MIT
-
----
-
-**Questions?**  
-Open an issue or reach out to the author.  
 **Good luck, and happy researching!**
 ```
+
+**Paste this into your repository’s `README.md`** for a clear, compelling, and concise project introduction. If you want to add a technical overview, code structure, or screenshot instructions, just say so and I’ll append them here!

@@ -2,8 +2,18 @@
 import os
 import re
 from openai import OpenAI
+from dotenv import load_dotenv
 
-PERPLEXITY_API_KEY = "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"
+# Load environment variables (ignore if .env file doesn't exist)
+try:
+    load_dotenv(override=True)
+except Exception:
+    pass  # Ignore errors loading .env file
+
+# Get API key from environment variable
+PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY")
+if not PERPLEXITY_API_KEY:
+    raise ValueError("PERPLEXITY_API_KEY environment variable is not set. Please set it in your .env file.")
 
 def generate_synthesis(claim, contradicted_papers, citation_cascades):
     """

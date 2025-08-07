@@ -1,9 +1,18 @@
 # agents/contradiction_detector.py
 import os
 from openai import OpenAI
+from dotenv import load_dotenv
 
-# Get your key from environment, or set directly.
-PERPLEXITY_API_KEY = "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"  # or "YOUR_KEY_HERE"
+# Load environment variables (ignore if .env file doesn't exist)
+try:
+    load_dotenv(override=True)
+except Exception:
+    pass  # Ignore errors loading .env file
+
+# Get API key from environment variable
+PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY")
+if not PERPLEXITY_API_KEY:
+    raise ValueError("PERPLEXITY_API_KEY environment variable is not set. Please set it in your .env file.")
 
 def detect_contradictions(claim: str) -> list:
     """

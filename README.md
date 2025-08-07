@@ -6,9 +6,15 @@ The **Research Integrity Network** is a modular, agentic system built in Python 
 ## Setup
 
 1. **Clone the repository** or download the project files.
-2. **Install dependencies** by running: `pip install streamlit PyPDF2 openai`
-3. **Set your Perplexity API key**: Edit your script or set the environment variable with your API key.
-4. **Launch the app**: `streamlit run streamlit_app.py`
+2. **Install dependencies** by running: `pip install -r requirements.txt`
+3. **Set up environment variables**:
+   - Copy `env.example` to `.env`
+   - Add your Perplexity API key to the `.env` file:
+     ```
+     PERPLEXITY_API_KEY=your_actual_api_key_here
+     ```
+   - Get your free API key from: https://www.perplexity.ai/settings/api
+4. **Launch the app**: `streamlit run ui/streamlit_app.py`
 5. **Open** the provided URL in your browser to access the app.
 
 ## How It Works

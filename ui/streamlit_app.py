@@ -1,9 +1,6 @@
 import sys
 from pathlib import Path
 
-# Add project root to the Python path
-sys.path.append(str(Path(__file__).parent.parent))
-
 import streamlit as st
 from PyPDF2 import PdfReader
 from agents.contradiction_detector import detect_contradictions
@@ -48,44 +45,56 @@ papers = [
 ]
 
 if st.button("🔎 Analyze Research Claim") and claim:
-    # Step 1: Detect contradictions
-    contradictions = detect_contradictions(claim)
-    st.markdown("### 1️⃣ Relevant Papers Found")
-    if contradictions:
-        for paper in contradictions:
-            with st.expander(paper["title"]):
-                st.write(paper["excerpt"])
-    else:
-        st.info("No contradictory papers found.")
+    # Initialize variables to prevent NameError
+    contradictions = []
+    citation_cascades = {}
+    
+    try:
+        # Step 1: Detect contradictions
+        contradictions = detect_contradictions(claim)
+        st.markdown("### 1️⃣ Relevant Papers Found")
+        if contradictions and len(contradictions) > 0:
+            for paper in contradictions:
+                with st.expander(paper["title"]):
+                    st.write(paper["excerpt"])
+        else:
+            st.info("No contradictory papers found.")
+            contradictions = []  # Ensure it's an empty list
 
-    # Step 2: Propagate citations from contradicted papers
-    if contradictions:
-        with st.spinner("Searching for citation cascades via Perplexity..."):
-            citation_cascades = propagate_citations(contradictions)
-        st.markdown("### 2️⃣ Citation Cascades from Contradicted Papers")
-        for paper_title, citing_papers in citation_cascades.items():
-            st.write(f"**{paper_title}** is cited by:")
-            if citing_papers:
-                for citing_text in citing_papers:
-                    st.write(f"• {citing_text}")
+        # Step 2: Propagate citations from contradicted papers
+        if contradictions and len(contradictions) > 0:
+            with st.spinner("Searching for citation cascades via Perplexity..."):
+                citation_cascades = propagate_citations(contradictions)
+            st.markdown("### 2️⃣ Citation Cascades from Contradicted Papers")
+            if citation_cascades:
+                for paper_title, citing_papers in citation_cascades.items():
+                    st.write(f"**{paper_title}** is cited by:")
+                    if citing_papers and len(citing_papers) > 0:
+                        for citing_text in citing_papers:
+                            st.write(f"• {citing_text}")
+                    else:
+                        st.write("_No citing papers found via web search_")
             else:
-                st.write("_No citing papers found via web search_")
-    else:
-        st.info("No citation cascades to show.")
+                st.info("No citation cascades found.")
+        else:
+            st.info("No citation cascades to show.")
+            citation_cascades = {}  # Ensure it's an empty dict
 
-    # FINAL STEP: Generate the full research synthesis
-    with st.spinner("Synthesizing findings into a research strategy using NeMotron..."):
-        # The Synthesis Agent takes all prior context to generate the final output
-        synthesis_text = generate_synthesis(claim, contradictions, citation_cascades)
-        
-    st.markdown("### 💡 Recommended Research Strategy")
-    st.markdown(synthesis_text) # Display the final, high-quality narrative
+        # FINAL STEP: Generate the full research synthesis
+        with st.spinner("Synthesizing findings into a research strategy using NeMotron..."):
+            # The Synthesis Agent takes all prior context to generate the final output
+            synthesis_text = generate_synthesis(claim, contradictions, citation_cascades)
+            
+        st.markdown("### 💡 Recommended Research Strategy")
+        st.markdown(synthesis_text) # Display the final, high-quality narrative
 
-    st.markdown("---")
-    st.success("Analysis Complete!")
+        st.markdown("---")
+        st.success("Analysis Complete!")
 
-    # Optional: Allow users to see the raw data the synthesis was based on
-    with st.expander("View Raw Data Found by Agents"):
-        st.json({"claim": claim, "papers_found": contradictions, "related_discussions": citation_cascades})
-
-
+        # Optional: Allow users to see the raw data the synthesis was based on
+        with st.expander("View Raw Data Found by Agents"):
+            st.json({"claim": claim, "papers_found": contradictions, "related_discussions": citation_cascades})
+            
+    except Exception as e:
+        st.error(f"An error occurred during analysis: {str(e)}")
+        st.info("Please try again with a different claim or check your internet connection.")

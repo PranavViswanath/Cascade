@@ -10,6 +10,8 @@ A beautiful, modern TypeScript React application for the Research Integrity Netw
 - **TypeScript**: Fully typed for better development experience
 - **Framer Motion**: Smooth animations and transitions
 - **Tailwind CSS**: Modern utility-first styling
+- **PDF Upload Support**: Drag and drop PDF files for analysis
+- **Text Input Support**: Direct claim entry for quick analysis
 
 ## 🚀 Quick Start
 
@@ -17,29 +19,34 @@ A beautiful, modern TypeScript React application for the Research Integrity Netw
 
 1. **Install Node.js** (v18 or higher):
    - Download from [nodejs.org](https://nodejs.org/)
-   - Or use a package manager like Chocolatey: `choco install nodejs`
+   - Or use Windows Package Manager: `winget install OpenJS.NodeJS`
 
 2. **Install Git** (if not already installed):
    - Download from [git-scm.com](https://git-scm.com/)
 
-### Installation
+### Installation & Running
 
 1. **Navigate to the UI directory**:
    ```bash
    cd ui
    ```
 
-2. **Install dependencies**:
+2. **Add Node.js to PATH** (if not already done):
+   ```powershell
+   $env:PATH = "C:\Program Files\nodejs;" + $env:PATH
+   ```
+
+3. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. **Start the development server**:
+4. **Start the development server**:
    ```bash
    npm run dev
    ```
 
-4. **Open your browser** and go to `http://localhost:3000`
+5. **Open your browser** and go to `http://localhost:3000`
 
 ## 🏗️ Project Structure
 
@@ -63,13 +70,30 @@ ui/
 └── tsconfig.json          # TypeScript configuration
 ```
 
+## 🎯 User Interface
+
+The application features a modern, intuitive interface:
+
+### Main Interface
+- **Header**: Clean logo and title with descriptive tagline
+- **Input Selection**: Toggle between "Enter a claim" and "Upload a PDF"
+- **PDF Upload Area**: Drag-and-drop interface with visual feedback
+- **Text Input**: Large textarea for direct claim entry
+- **Analysis Button**: Prominent call-to-action with loading states
+
+### Visual Design
+- **Color Scheme**: Blue gradient primary colors with clean whites and grays
+- **Typography**: Modern, readable fonts with proper hierarchy
+- **Spacing**: Generous whitespace for clean, uncluttered appearance
+- **Animations**: Smooth transitions and loading states throughout
+
 ## 🎯 Workflow
 
-The application maintains the exact same workflow as the original Streamlit app:
+The application provides a streamlined research analysis workflow:
 
 1. **Input Selection**: Choose between text input or PDF upload
-2. **Claim Entry**: Enter your research claim or upload a PDF
-3. **Analysis**: Click "Analyze Research Claim" to start the process
+2. **Claim Entry**: Enter your research claim or upload a PDF document
+3. **Analysis**: Click "🔎 Analyze Research Claim" to start the process
 4. **Step 1 - Detection**: Beautiful loading spinner while searching for contradictions via Perplexity
 5. **Step 2 - Propagation**: Animated loading while mapping citation cascades
 6. **Step 3 - Synthesis**: Loading animation while formulating research strategy with NVIDIA NeMo
@@ -122,15 +146,6 @@ The UI is designed to work with the Python backend. The API service (`src/servic
 - **Mock data**: For development and demonstration
 - **Type safety**: Full TypeScript integration
 
-## 🎯 Next Steps
-
-1. **Install Node.js** on your system
-2. **Run the installation commands** above
-3. **Start the development server**
-4. **Enjoy the beautiful modern UI!**
-
-The application will provide the same functionality as the Streamlit version but with a much more polished and professional appearance.
-
 ## 🚀 Deployment
 
 For production deployment:
@@ -141,6 +156,15 @@ npm run build
 
 This creates a `dist/` folder with optimized static files that can be deployed to any web server or CDN.
 
+## 🎯 Current Status
+
+✅ **Node.js Installation**: Successfully installed and configured  
+✅ **Dependencies**: All React dependencies installed  
+✅ **Development Server**: Running on http://localhost:3000  
+✅ **UI Components**: Modern, responsive interface implemented  
+✅ **PDF Upload**: Drag-and-drop functionality working  
+✅ **Text Input**: Direct claim entry supported  
+
 ---
 
-**Note**: This modern UI maintains 100% feature parity with the original Streamlit application while providing a significantly enhanced user experience with beautiful animations and modern design principles.
+**Note**: This modern UI provides a significantly enhanced user experience compared to the original Streamlit application, with beautiful animations, modern design principles, and improved usability.

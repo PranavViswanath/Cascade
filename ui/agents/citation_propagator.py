@@ -40,7 +40,7 @@ def propagate_citations(contradicted_papers):
                 
             # Craft a prompt to find papers/articles citing this specific work
             SYSTEM_PROMPT = (
-                "You are an expert scientific researcher. Identify any academic papers, articles, web discussions, or blogs that reference or mention the following published work—even informally. For each, provide the title, source, and a brief excerpt or mention pulled from the search result. Format each as: Title: [title] | Source: [link or context] | Excerpt: [relevant text]"
+                "You are an expert scientific researcher. Find academic papers, articles, or publications that explicitly cite, reference, or build upon the following published work. Focus on papers that mention this work in their references, citations, or related work sections. For each citing paper, provide the title in this format: **\"Paper Title\"**. Only include papers that actually cite or reference the target paper, not the target paper itself."
             )
 
             try:
@@ -61,25 +61,28 @@ def propagate_citations(contradicted_papers):
                 if response.choices and len(response.choices) > 0:
                     content = response.choices[0].message.content
                     print(f"🔍 Citation Agent: Response content for {paper_title}: {content[:300]}...")
-                    if content and "Title:" in content:
+                    if content:
+                        # Simple parsing - look for **"Title"** format
                         lines = content.strip().split("\n")
                         for line in lines:
                             line = line.strip()
-                            if line.startswith("Title:"):
-                                if "| Source:" in line or "| Excerpt:" in line:
-                                    # Parse format: Title: X | Source: Y | Excerpt: Z
-                                    parts = line.split("|")
-                                    title = parts[0].replace("Title:", "").strip()
-                                    if title:
-                                        citing_papers.append(title)
-                                else:
-                                    # Simple title format
-                                    title = line.replace("Title:", "").strip()
-                                    if title:
+                            
+                            # Look for **"Title"** format but exclude the paper being searched for
+                            if '**"' in line and '"**' in line:
+                                start = line.find('**"') + 3
+                                end = line.find('"**', start)
+                                if start > 2 and end > start:
+                                    title = line[start:end].strip()
+                                    # Don't include the paper being searched for itself
+                                    if (title and len(title) > 10 and 
+                                        title.lower() not in paper_title.lower() and
+                                        paper_title.lower() not in title.lower()):
                                         citing_papers.append(title)
                     
-                    # If no papers found, log it but keep empty list
-                    if not citing_papers:
+                    # Debug: show what papers were found
+                    if citing_papers:
+                        print(f"✅ Found {len(citing_papers)} citing papers for {paper_title}: {citing_papers[:3]}")
+                    else:
                         print(f"⚠️ No citing papers found for: {paper_title}")
 
                 # Remove duplicates from citing papers

@@ -16,10 +16,15 @@ if not PERPLEXITY_API_KEY:
 
 def propagate_citations(contradicted_papers):
     """For each contradicted paper, find recent papers or articles citing it using Perplexity web search."""
+    print(f"🔍 Citation Agent: Received {len(contradicted_papers) if contradicted_papers else 0} papers")
+    print(f"🔍 Citation Agent: Papers data: {contradicted_papers}")
+    
     # Input validation
     if not contradicted_papers or not isinstance(contradicted_papers, list) or len(contradicted_papers) == 0:
+        print("🔍 Citation Agent: No valid papers received")
         return {}
     
+
     try:
         client = OpenAI(api_key=PERPLEXITY_API_KEY, base_url="https://api.perplexity.ai")
         citation_cascades = {}
@@ -39,19 +44,23 @@ def propagate_citations(contradicted_papers):
             )
 
             try:
+                print(f"🔍 Citation Agent: Searching citations for: {paper_title}")
+                # Use same cheap model as agent 1
                 response = client.chat.completions.create(
-                    model="sonar-reasoning",  # Or "sonar-small-chat"; experiment for accuracy
+                    model="sonar",  # Use same model as contradiction detector
                     messages=[
                         {"role": "system", "content": SYSTEM_PROMPT},
                         {"role": "user", "content": f"Find papers citing: {paper_title}"},
                     ],
                     temperature=0.2,
                 )
+                print(f"🔍 Citation Agent: Got response for {paper_title}")
 
                 # Parse the results—these are actual web-search-derived citations
                 citing_papers = []
                 if response.choices and len(response.choices) > 0:
                     content = response.choices[0].message.content
+                    print(f"🔍 Citation Agent: Response content for {paper_title}: {content[:300]}...")
                     if content and "Title:" in content:
                         lines = content.strip().split("\n")
                         for line in lines:
@@ -69,53 +78,30 @@ def propagate_citations(contradicted_papers):
                                     if title:
                                         citing_papers.append(title)
                     
-                    # If no papers found, use demo data for this specific paper
+                    # If no papers found, log it but keep empty list
                     if not citing_papers:
-                        if "Large Language Models Still Cannot Plan" in paper_title:
-                            citing_papers = [
-                                "Planning with Large Language Models for Code Generation: Recent Advances and Challenges",
-                                "A Systematic Review of LLM Limitations in Complex Reasoning Tasks", 
-                                "Beyond Pattern Matching: Towards True AI Reasoning Capabilities"
-                            ]
-                        elif "Reasoning Abilities" in paper_title:
-                            citing_papers = [
-                                "Rethinking Evaluation Metrics for Large Language Model Reasoning",
-                                "The Illusion of Understanding in Large Language Models",
-                                "Cognitive Architectures vs. Large Language Models: A Comparative Study"
-                            ]
-                        else:
-                            citing_papers = [
-                                "Emergent Capabilities in AI: Reality or Statistical Artifact?",
-                                "Training Data Memorization vs. Genuine Learning in LLMs",
-                                "Critical Analysis of Emergent Behaviors in Neural Networks"
-                            ]
+                        print(f"⚠️ No citing papers found for: {paper_title}")
 
-                citation_cascades[paper_title] = citing_papers
+                # Remove duplicates from citing papers
+                unique_citing_papers = []
+                seen_papers = set()
+                for paper in citing_papers:
+                    paper_lower = paper.lower().strip()
+                    if paper_lower not in seen_papers:
+                        seen_papers.add(paper_lower)
+                        unique_citing_papers.append(paper)
+                
+                citation_cascades[paper_title] = unique_citing_papers
                 
             except Exception as e:
-                print(f"Error processing paper '{paper_title}': {str(e)}")
+                print(f"⚠️ Error processing paper '{paper_title}': {str(e)}")
+                print(f"⚠️ Error type: {type(e)}")
+                print(f"⚠️ Full error details: {repr(e)}")
                 citation_cascades[paper_title] = []
 
         return citation_cascades
         
     except Exception as e:
         print(f"Error in propagate_citations: {str(e)}")
-        # Return demo data for demonstration purposes
-        return {
-            "Large Language Models Still Cannot Plan: A Benchmark Study": [
-                "Planning with Large Language Models for Code Generation: Recent Advances and Challenges",
-                "A Systematic Review of LLM Limitations in Complex Reasoning Tasks",
-                "Beyond Pattern Matching: Towards True AI Reasoning Capabilities"
-            ],
-            "On the Reasoning Abilities of Large Language Models: A Critical Analysis": [
-                "Rethinking Evaluation Metrics for Large Language Model Reasoning",
-                "The Illusion of Understanding in Large Language Models",
-                "Cognitive Architectures vs. Large Language Models: A Comparative Study"
-            ],
-            "Emergent Abilities of Large Language Models Are Not What They Seem": [
-                "Emergent Capabilities in AI: Reality or Statistical Artifact?",
-                "Training Data Memorization vs. Genuine Learning in LLMs",
-                "Critical Analysis of Emergent Behaviors in Neural Networks"
-            ]
-        }
+        return {}
 

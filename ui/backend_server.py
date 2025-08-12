@@ -66,16 +66,16 @@ async def root():
     return {"message": "Research Integrity Network API is running"}
 
 @app.post("/extract_text", response_model=TextExtractionResponse)
-async def extract_text_from_pdf(pdf_file: UploadFile = File(...)):
+async def extract_text_from_pdf(file: UploadFile = File(...)):
     """
     Extract text from uploaded PDF file
     """
     try:
-        if not pdf_file.filename.lower().endswith('.pdf'):
+        if not file.filename or not file.filename.lower().endswith('.pdf'):
             raise HTTPException(status_code=400, detail="File must be a PDF")
         
         # Read the PDF file
-        pdf_content = await pdf_file.read()
+        pdf_content = await file.read()
         pdf_reader = PdfReader(io.BytesIO(pdf_content))
         
         # Extract text from all pages
@@ -161,5 +161,5 @@ async def analyze_claim_endpoint(request: AnalyzeRequest):
         raise HTTPException(status_code=500, detail=f"Error analyzing claim: {str(e)}")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8502)
+    uvicorn.run(app, host="0.0.0.0", port=8501)
 

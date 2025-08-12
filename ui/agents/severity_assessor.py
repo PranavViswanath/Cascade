@@ -71,13 +71,12 @@ def generate_synthesis(claim, contradicted_papers, citation_cascades):
         )
 
         response = client.chat.completions.create(
-            model="sonar",  # Try the basic sonar model first
+            model="sonar",  # Use same model as other agents
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt},
             ],
             temperature=0.1,
-            max_tokens=250
         )
 
         # Clean the response aggressively to remove thinking process
@@ -100,12 +99,4 @@ def generate_synthesis(claim, contradicted_papers, citation_cascades):
         
     except Exception as e:
         print(f"Error in generate_synthesis: {str(e)}")
-        return """Based on these contradictory findings, there are several research directions to consider:
-
-• **Experimental Validation**: Design controlled experiments to test the specific claims made in your research against the contradictory evidence found
-
-• **Methodological Comparison**: Compare your methodology with the approaches used in the contradictory papers to identify key differences 
-
-• **Gap Analysis**: Focus on the specific gaps or limitations highlighted by the contradictory research to refine your approach
-
-Good luck!"""
+        return "Unable to generate research strategy. Please try again."

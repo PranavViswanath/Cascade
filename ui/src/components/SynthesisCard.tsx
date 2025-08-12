@@ -18,8 +18,8 @@ const SynthesisCard: React.FC<SynthesisCardProps> = ({ synthesis }) => {
           <Lightbulb className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Research Strategy</h3>
-          <p className="text-sm text-gray-600">AI-powered recommendations</p>
+          <h3 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">⚡ STRATEGIC INTELLIGENCE</h3>
+          <p className="text-sm text-gray-700 font-medium">NVIDIA NeMo agents reveal your next move</p>
         </div>
       </div>
       
@@ -30,9 +30,16 @@ const SynthesisCard: React.FC<SynthesisCardProps> = ({ synthesis }) => {
         className="prose prose-sm max-w-none"
       >
         <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-            {synthesis}
-          </p>
+          <div 
+            className="text-gray-700 leading-relaxed"
+            dangerouslySetInnerHTML={{
+              __html: synthesis
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/•/g, '•')
+                .replace(/\n/g, '<br/>')
+            }}
+          />
         </div>
       </motion.div>
       

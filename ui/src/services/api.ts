@@ -1,6 +1,6 @@
 import { Paper, CitationCascade, AnalysisResult } from '../types';
 
-const API_BASE_URL = 'http://localhost:8502';
+const API_BASE_URL = 'http://localhost:8501';
 
 export const api = {
   async extractTextFromPDF(file: File): Promise<string> {
@@ -12,47 +12,16 @@ export const api = {
         method: 'POST',
         body: formData,
       });
-      
+
       if (!response.ok) {
-        throw new Error('Failed to extract text from PDF');
+        throw new Error(`Failed to extract text: ${response.status}`);
       }
-      
-      const result = await response.json();
-      return result.text;
-    } catch (error) {
-      console.error('Error extracting text from PDF via API:', error);
-      // Fallback: try to extract text client-side
-      return await this.extractTextClientSide(file);
-    }
-  },
 
-  async extractTextClientSide(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          const arrayBuffer = e.target?.result as ArrayBuffer;
-          const text = await this.parsePDFText(arrayBuffer);
-          resolve(text);
-        } catch (error) {
-          reject(new Error('Failed to extract text from PDF'));
-        }
-      };
-      reader.onerror = () => reject(new Error('Failed to read PDF file'));
-      reader.readAsArrayBuffer(file);
-    });
-  },
-
-  async parsePDFText(arrayBuffer: ArrayBuffer): Promise<string> {
-    try {
-      // Import pdf-parse dynamically to avoid SSR issues
-      const pdfParse = await import('pdf-parse');
-      const data = new Uint8Array(arrayBuffer);
-      const result = await pdfParse.default(data);
-      return result.text;
+      const data = await response.json();
+      return data.text;
     } catch (error) {
-      console.error('Error parsing PDF:', error);
-      return "PDF text extraction failed. Please try using the text input option instead.";
+      console.error('Error extracting text from PDF:', error);
+      throw error;
     }
   },
 
@@ -65,100 +34,112 @@ export const api = {
         },
         body: JSON.stringify({ claim }),
       });
-      
+
       if (!response.ok) {
-        throw new Error('Failed to detect contradictions');
+        throw new Error(`Failed to detect contradictions: ${response.status}`);
       }
-      
-      const result = await response.json();
-      return result.contradictions || [];
+
+      const data = await response.json();
+      return data.contradictions || [];
     } catch (error) {
       console.error('Error detecting contradictions:', error);
-      // Return empty array if backend is not available
-      return [];
+      throw error;
     }
   },
 
-  async propagateCitations(contradictions: Paper[]): Promise<CitationCascade> {
+  async propagateCitations(papers: Paper[]): Promise<CitationCascade> {
     try {
       const response = await fetch(`${API_BASE_URL}/propagate_citations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ contradictions }),
+        body: JSON.stringify({ contradictions: papers }),
       });
-      
+
       if (!response.ok) {
-        throw new Error('Failed to propagate citations');
+        throw new Error(`Failed to propagate citations: ${response.status}`);
       }
-      
-      const result = await response.json();
-      return result.citation_cascades || {};
+
+      const data = await response.json();
+      return data.citation_cascades || {};
     } catch (error) {
       console.error('Error propagating citations:', error);
-      // Return empty object if backend is not available
-      return {};
+      throw error;
     }
   },
 
-  async generateSynthesis(claim: string, contradictions: Paper[], citationCascades: CitationCascade): Promise<string> {
+  async generateSynthesis(contradictions: Paper[], citations: CitationCascade, claim: string): Promise<string> {
     try {
       const response = await fetch(`${API_BASE_URL}/generate_synthesis`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ claim, contradictions, citationCascades }),
+        body: JSON.stringify({
+          contradictions,
+          citationCascades: citations,
+          claim
+        }),
       });
-      
+
       if (!response.ok) {
-        throw new Error('Failed to generate synthesis');
+        throw new Error(`Failed to generate synthesis: ${response.status}`);
       }
-      
-      const result = await response.json();
-      return result.synthesis || 'Unable to generate synthesis. Please try again.';
+
+      const data = await response.json();
+      return data.synthesis || 'Unable to generate synthesis. Please try again.';
     } catch (error) {
       console.error('Error generating synthesis:', error);
-      // Return a helpful message if backend is not available
-      return "Based on this new research, I recommend focusing on exploring the claim through systematic literature review and experimental validation. Consider reaching out to experts in the field for collaboration opportunities. Good luck!";
+      throw error;
     }
   },
 
-  async analyzeClaim(claim: string): Promise<AnalysisResult> {
+  async analyzeClaim(
+    claim: string, 
+    setCurrentStep: (step: string) => void,
+    onPartialResult: (result: Partial<AnalysisResult>) => void
+  ): Promise<AnalysisResult> {
     try {
-      console.log('🔍 Frontend: Starting analysis for claim:', claim);
-      console.log('🔍 Frontend: API URL:', `${API_BASE_URL}/analyze`);
+      // Step 1: Agent 1 - Detect contradictions
+      setCurrentStep('analyzing-start');
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      const response = await fetch(`${API_BASE_URL}/analyze`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ claim }),
-      });
+      setCurrentStep('deep-search');
+      const contradictions = await this.detectContradictions(claim);
       
-      console.log('🔍 Frontend: Response status:', response.status);
-      console.log('🔍 Frontend: Response ok:', response.ok);
+      setCurrentStep('validating-sources');
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('🔍 Frontend: Error response:', errorText);
-        throw new Error(`Failed to analyze claim: ${response.status} ${errorText}`);
-      }
+      // Show partial results after Step 1
+      onPartialResult({ claim, contradictions, citationCascades: {}, synthesis: '' });
       
-      const result = await response.json();
-      console.log('🔍 Frontend: Received result:', result);
+      // Step 2: Agent 2 - Propagate citations
+      setCurrentStep('citation-mapping');
+      const citations = await this.propagateCitations(contradictions);
+      
+      setCurrentStep('impact-analysis');
+      await new Promise(resolve => setTimeout(resolve, 600));
+      
+      // Show partial results after Step 2
+      onPartialResult({ claim, contradictions, citationCascades: citations, synthesis: '' });
+      
+      // Step 3: Agent 3 - Generate synthesis
+      setCurrentStep('synthesis-prep');
+      await new Promise(resolve => setTimeout(resolve, 400));
+      
+      setCurrentStep('generating-strategy');
+      const synthesis = await this.generateSynthesis(contradictions, citations, claim);
       
       return {
-        claim: result.claim,
-        contradictions: result.contradictions || [],
-        citationCascades: result.citation_cascades || {},
-        synthesis: result.synthesis || 'Unable to generate synthesis. Please try again.'
+        claim,
+        contradictions,
+        citationCascades: citations,
+        synthesis
       };
     } catch (error) {
-      console.error('🔍 Frontend: Error analyzing claim:', error);
-      throw new Error(`Failed to analyze claim: ${error.message}`);
+      console.error('Error analyzing claim:', error);
+      throw error;
     }
   }
 };

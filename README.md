@@ -14,8 +14,17 @@ The **Research Integrity Network** is a modular, agentic system built in Python 
      PERPLEXITY_API_KEY=your_actual_api_key_here
      ```
    - Get your free API key from: https://www.perplexity.ai/settings/api
-4. **Launch the app**: `streamlit run ui/streamlit_app.py`
-5. **Open** the provided URL in your browser to access the app.
+4. **Start the backend server**: 
+   - **Option A**: Run `python start_backend.py` (cross-platform)
+   - **Option B**: Run `start_backend.bat` (Windows)
+   - **Option C**: Run `python ui/backend_server.py` directly
+5. **Start the frontend** (in a new terminal): 
+   ```bash
+   cd ui
+   npm install
+   npm run dev
+   ```
+6. **Open** `http://localhost:3000` in your browser to access the app.
 
 ## How It Works
 

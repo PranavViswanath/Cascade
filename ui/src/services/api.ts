@@ -1,8 +1,61 @@
 import { Paper, CitationCascade, AnalysisResult } from '../types';
 
-const API_BASE_URL = 'http://localhost:8501';
+const API_BASE_URL = 'http://localhost:8502';
 
 export const api = {
+  async extractTextFromPDF(file: File): Promise<string> {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch(`${API_BASE_URL}/extract_text`, {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to extract text from PDF');
+      }
+      
+      const result = await response.json();
+      return result.text;
+    } catch (error) {
+      console.error('Error extracting text from PDF via API:', error);
+      // Fallback: try to extract text client-side
+      return await this.extractTextClientSide(file);
+    }
+  },
+
+  async extractTextClientSide(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const arrayBuffer = e.target?.result as ArrayBuffer;
+          const text = await this.parsePDFText(arrayBuffer);
+          resolve(text);
+        } catch (error) {
+          reject(new Error('Failed to extract text from PDF'));
+        }
+      };
+      reader.onerror = () => reject(new Error('Failed to read PDF file'));
+      reader.readAsArrayBuffer(file);
+    });
+  },
+
+  async parsePDFText(arrayBuffer: ArrayBuffer): Promise<string> {
+    try {
+      // Import pdf-parse dynamically to avoid SSR issues
+      const pdfParse = await import('pdf-parse');
+      const data = new Uint8Array(arrayBuffer);
+      const result = await pdfParse.default(data);
+      return result.text;
+    } catch (error) {
+      console.error('Error parsing PDF:', error);
+      return "PDF text extraction failed. Please try using the text input option instead.";
+    }
+  },
+
   async detectContradictions(claim: string): Promise<Paper[]> {
     try {
       const response = await fetch(`${API_BASE_URL}/detect_contradictions`, {
@@ -17,9 +70,11 @@ export const api = {
         throw new Error('Failed to detect contradictions');
       }
       
-      return await response.json();
+      const result = await response.json();
+      return result.contradictions || [];
     } catch (error) {
       console.error('Error detecting contradictions:', error);
+      // Return empty array if backend is not available
       return [];
     }
   },
@@ -38,9 +93,11 @@ export const api = {
         throw new Error('Failed to propagate citations');
       }
       
-      return await response.json();
+      const result = await response.json();
+      return result.citation_cascades || {};
     } catch (error) {
       console.error('Error propagating citations:', error);
+      // Return empty object if backend is not available
       return {};
     }
   },
@@ -60,58 +117,48 @@ export const api = {
       }
       
       const result = await response.json();
-      return result.synthesis;
+      return result.synthesis || 'Unable to generate synthesis. Please try again.';
     } catch (error) {
       console.error('Error generating synthesis:', error);
-      return 'Unable to generate synthesis at this time. Please try again.';
+      // Return a helpful message if backend is not available
+      return "Based on this new research, I recommend focusing on exploring the claim through systematic literature review and experimental validation. Consider reaching out to experts in the field for collaboration opportunities. Good luck!";
     }
   },
 
   async analyzeClaim(claim: string): Promise<AnalysisResult> {
-    // For now, we'll simulate the API calls with the Python backend
-    // In a real implementation, you'd make actual HTTP requests
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Mock data for demonstration
-    const contradictions: Paper[] = [
-      {
-        title: "Limitations of Large Language Models in Reasoning Tasks",
-        excerpt: "Recent research suggests that while LLMs excel at pattern recognition, they struggle with complex logical reasoning and abstract thinking tasks."
-      },
-      {
-        title: "The Reasoning Capabilities of Modern AI Systems",
-        excerpt: "A comprehensive study reveals that current AI systems, including LLMs, have significant limitations in deductive reasoning and causal inference."
+    try {
+      console.log('🔍 Frontend: Starting analysis for claim:', claim);
+      console.log('🔍 Frontend: API URL:', `${API_BASE_URL}/analyze`);
+      
+      const response = await fetch(`${API_BASE_URL}/analyze`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ claim }),
+      });
+      
+      console.log('🔍 Frontend: Response status:', response.status);
+      console.log('🔍 Frontend: Response ok:', response.ok);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('🔍 Frontend: Error response:', errorText);
+        throw new Error(`Failed to analyze claim: ${response.status} ${errorText}`);
       }
-    ];
-
-    const citationCascades: CitationCascade = {
-      "Limitations of Large Language Models in Reasoning Tasks": [
-        "Cognitive Science Review: AI reasoning limitations",
-        "Journal of Artificial Intelligence: Comparative analysis of reasoning capabilities"
-      ],
-      "The Reasoning Capabilities of Modern AI Systems": [
-        "Nature Machine Intelligence: Systematic review of AI reasoning",
-        "Science: The future of artificial reasoning"
-      ]
-    };
-
-    const synthesis = `Based on this new research about LLM reasoning capabilities, I recommend focusing on three key areas for your investigation:
-
-• **Comparative Analysis**: Conduct systematic comparisons between different LLM architectures to identify specific reasoning strengths and weaknesses across various domains.
-
-• **Hybrid Approaches**: Explore combining LLMs with symbolic reasoning systems to enhance logical inference capabilities.
-
-• **Evaluation Framework**: Develop comprehensive benchmarks that test both surface-level pattern matching and deeper causal reasoning abilities.
-
-Good luck with your research!`;
-
-    return {
-      claim,
-      contradictions,
-      citationCascades,
-      synthesis
-    };
+      
+      const result = await response.json();
+      console.log('🔍 Frontend: Received result:', result);
+      
+      return {
+        claim: result.claim,
+        contradictions: result.contradictions || [],
+        citationCascades: result.citation_cascades || {},
+        synthesis: result.synthesis || 'Unable to generate synthesis. Please try again.'
+      };
+    } catch (error) {
+      console.error('🔍 Frontend: Error analyzing claim:', error);
+      throw new Error(`Failed to analyze claim: ${error.message}`);
+    }
   }
 };

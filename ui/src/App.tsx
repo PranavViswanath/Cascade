@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Upload, FileText, Brain, Network, Sparkles, CheckCircle, AlertCircle } from 'lucide-react';
+import { Search, Upload, FileText, Brain, Network, Sparkles, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { Paper, CitationCascade, AnalysisResult, InputType } from './types';
 import { api } from './services/api';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -10,37 +10,87 @@ import SynthesisCard from './components/SynthesisCard';
 const App: React.FC = () => {
   const [inputType, setInputType] = useState<InputType>('text');
   const [claim, setClaim] = useState('');
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentStep, setCurrentStep] = useState('');
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (file: File) => {
+    if (file.type !== 'application/pdf') {
+      setError('Please upload a PDF file.');
+      return;
+    }
+    
+    setUploadedFile(file);
+    setError(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  };
+
+  const handleFileInputClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const removeFile = () => {
+    setUploadedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const handleAnalyze = async () => {
-    if (!claim.trim()) return;
+    if ((inputType === 'text' && !claim.trim()) || (inputType === 'pdf' && !uploadedFile)) {
+      setError('Please provide a research claim or upload a PDF file.');
+      return;
+    }
 
     setIsAnalyzing(true);
     setError(null);
     setAnalysisResult(null);
 
     try {
-      // Step 1: Detect contradictions
+      let analysisClaim = claim;
+      
+      // If PDF is uploaded, extract text from it
+      if (inputType === 'pdf' && uploadedFile) {
+        setCurrentStep('extracting');
+        analysisClaim = await api.extractTextFromPDF(uploadedFile);
+        setClaim(analysisClaim); // Update the claim state with extracted text
+      }
+
+      // Analyze the claim using the unified endpoint
       setCurrentStep('detecting');
-      const contradictions = await api.detectContradictions(claim);
-
-      // Step 2: Propagate citations
-      setCurrentStep('propagating');
-      const citationCascades = await api.propagateCitations(contradictions);
-
-      // Step 3: Generate synthesis
-      setCurrentStep('synthesizing');
-      const synthesis = await api.generateSynthesis(claim, contradictions, citationCascades);
-
-      setAnalysisResult({
-        claim,
-        contradictions,
-        citationCascades,
-        synthesis
-      });
+      const result = await api.analyzeClaim(analysisClaim);
+      
+      setAnalysisResult(result);
     } catch (err) {
       setError('An error occurred during analysis. Please try again.');
     } finally {
@@ -51,6 +101,8 @@ const App: React.FC = () => {
 
   const getStepMessage = () => {
     switch (currentStep) {
+      case 'extracting':
+        return 'Extracting text from PDF...';
       case 'detecting':
         return 'Searching for contradictory research papers via Perplexity...';
       case 'propagating':
@@ -136,17 +188,60 @@ const App: React.FC = () => {
                 <label className="text-sm font-medium text-gray-700 mb-2 block">
                   Upload your research paper as PDF
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary-400 transition-colors">
-                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600">Drag and drop your PDF here, or click to browse</p>
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={handleFileInputClick}
+                  className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
+                    isDragOver
+                      ? 'border-primary-400 bg-primary-50'
+                      : uploadedFile
+                      ? 'border-green-400 bg-green-50'
+                      : 'border-gray-300 hover:border-primary-400'
+                  }`}
+                >
+                  {uploadedFile ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-center space-x-2">
+                        <FileText className="w-8 h-8 text-green-500" />
+                        <span className="text-green-700 font-medium">{uploadedFile.name}</span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFile();
+                          }}
+                          className="p-1 hover:bg-red-100 rounded-full"
+                        >
+                          <X className="w-4 h-4 text-red-500" />
+                        </button>
+                      </div>
+                      <p className="text-sm text-green-600">
+                        File size: {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600">Drag and drop your PDF here, or click to browse</p>
+                      <p className="text-sm text-gray-500 mt-2">Any size PDF supported</p>
+                    </>
+                  )}
                 </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleFileInputChange}
+                  className="hidden"
+                />
               </div>
             )}
 
             {/* Analyze Button */}
             <button
               onClick={handleAnalyze}
-              disabled={!claim.trim() || isAnalyzing}
+              disabled={((inputType === 'text' && !claim.trim()) || (inputType === 'pdf' && !uploadedFile)) || isAnalyzing}
               className="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-primary-600 hover:to-primary-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
             >
               {isAnalyzing ? (
@@ -193,7 +288,7 @@ const App: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <AlertCircle className="w-6 h-6 text-red-500" />
                   <div>
-                    <h3 className="text-lg font-semibold text-red-800">Analysis Error</h3>
+                    <h3 className="text-lg font-semibold text-red-800">Error</h3>
                     <p className="text-red-600">{error}</p>
                   </div>
                 </div>

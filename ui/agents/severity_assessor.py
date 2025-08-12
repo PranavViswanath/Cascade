@@ -50,19 +50,24 @@ def generate_synthesis(claim, contradicted_papers, citation_cascades):
             citation_context = "\nNo significant citation cascades found."
 
         SYSTEM_PROMPT = (
-            "You are a senior researcher giving direct advice to a colleague. "
-            "Respond ONLY with the final advice - no thinking process, no analysis steps. "
-            "Write exactly one paragraph starting with 'Based on this new research...' "
-            "then add 2-3 bullet points with specific next steps, ending with 'Good luck!' "
-            "Be conversational and supportive. If no contradictory papers were found, "
-            "focus on suggesting research directions and potential areas to explore."
+            "You are a research advisor. Look at these paper titles and give brief research direction advice. "
+            "Start with 'Based on these contradictory findings...' then give 2-3 bullet points of research directions. "
+            "End with 'Good luck!' Keep it simple and focused on the paper titles."
         )
 
+        # Extract just the titles for simpler analysis
+        paper_titles = []
+        if contradicted_papers and isinstance(contradicted_papers, list):
+            for paper in contradicted_papers:
+                if isinstance(paper, dict) and "title" in paper:
+                    paper_titles.append(paper["title"])
+        
+        titles_text = "\n".join([f"- {title}" for title in paper_titles]) if paper_titles else "No contradictory papers found"
+
         user_prompt = (
-            f"New research uploaded: {claim[:300]}...\n\n"
-            f"Related work found:\n{papers_context}\n"
-            f"{citation_context}\n\n"
-            f"Give direct advice to the researcher about research directions."
+            f"Research claim: {claim[:200]}...\n\n"
+            f"Contradictory papers found:\n{titles_text}\n\n"
+            f"What research directions should be pursued?"
         )
 
         response = client.chat.completions.create(
@@ -95,4 +100,12 @@ def generate_synthesis(claim, contradicted_papers, citation_cascades):
         
     except Exception as e:
         print(f"Error in generate_synthesis: {str(e)}")
-        return "Based on this new research, I recommend focusing on exploring the claim through systematic literature review and experimental validation. Consider reaching out to experts in the field for collaboration opportunities. Good luck!"
+        return """Based on these contradictory findings, there are several research directions to consider:
+
+• **Experimental Validation**: Design controlled experiments to test the specific claims made in your research against the contradictory evidence found
+
+• **Methodological Comparison**: Compare your methodology with the approaches used in the contradictory papers to identify key differences 
+
+• **Gap Analysis**: Focus on the specific gaps or limitations highlighted by the contradictory research to refine your approach
+
+Good luck!"""

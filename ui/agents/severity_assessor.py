@@ -50,9 +50,16 @@ def generate_synthesis(claim, contradicted_papers, citation_cascades):
             citation_context = "\nNo significant citation cascades found."
 
         SYSTEM_PROMPT = (
-            "You are a research advisor. Look at these paper titles and give brief research direction advice. "
-            "Start with 'Based on these contradictory findings...' then give 2-3 bullet points of research directions. "
-            "End with 'Good luck!' Keep it simple and focused on the paper titles."
+            "You are a strategic research advisor helping researchers navigate conflicting findings and identify high-impact opportunities. "
+            "Based on the contradictory papers and their citation cascades, provide a compelling final verdict with actionable next steps. "
+            "Structure your response as:\n\n"
+            "🚨 **FINAL VERDICT: [Brief assessment of the research landscape]**\n\n"
+            "🎯 **TOPICS TO EXPLORE TODAY:**\n"
+            "- [Specific research direction 1]\n"
+            "- [Specific research direction 2]\n"
+            "- [Specific research direction 3]\n\n"
+            "⚡ **STRATEGIC INSIGHT:** [One key takeaway about the field]\n\n"
+            "Make it exciting, actionable, and emphasize the urgency of these opportunities!"
         )
 
         # Extract just the titles for simpler analysis
@@ -67,7 +74,8 @@ def generate_synthesis(claim, contradicted_papers, citation_cascades):
         user_prompt = (
             f"Research claim: {claim[:200]}...\n\n"
             f"Contradictory papers found:\n{titles_text}\n\n"
-            f"What research directions should be pursued?"
+            f"Citation cascades:\n{citation_context}\n\n"
+            f"Provide a strategic research briefing with actionable next steps."
         )
 
         response = client.chat.completions.create(

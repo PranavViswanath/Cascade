@@ -144,7 +144,7 @@ const App: React.FC = () => {
             </div>
             <div>
               <h1 className="text-5xl font-black bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                ResearchKill
+                Cascade
               </h1>
               <p className="text-sm font-medium text-gray-500 tracking-wide">POWERED BY NVIDIA NEMO</p>
             </div>
@@ -155,7 +155,7 @@ const App: React.FC = () => {
               <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent"> seconds</span>
             </h2>
             <p className="text-lg text-gray-600">
-              AI-powered research agents orchestrate to detect contradictions, map citation impacts, and reveal if your breakthrough just got eliminated 💀
+              AI-powered research agents orchestrate to detect contradictions, map citation cascades, and reveal the impact chain of your research landscape ⚡
             </p>
           </div>
         </motion.div>
@@ -169,7 +169,7 @@ const App: React.FC = () => {
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
             {/* Input Type Selection */}
             <div className="mb-6">
-              <label className="text-lg font-bold text-gray-800 mb-4 block">🎯 What's about to get destroyed?</label>
+              <label className="text-lg font-bold text-gray-800 mb-4 block">🎯 What research claim to analyze?</label>
               <div className="flex space-x-4">
                 <button
                   onClick={() => setInputType('text')}
@@ -200,7 +200,7 @@ const App: React.FC = () => {
             {inputType === 'text' ? (
               <div className="mb-6">
                 <label className="text-sm font-bold text-gray-800 mb-3 block">
-                  🔥 What breakthrough are you claiming?
+                  🔥 What research claim to validate?
                 </label>
                 <textarea
                   value={claim}
@@ -212,7 +212,7 @@ const App: React.FC = () => {
             ) : (
               <div className="mb-6">
                 <label className="text-sm font-bold text-gray-800 mb-3 block">
-                  💣 Drop your paper and watch it get analyzed
+                  📄 Drop your paper for analysis
                 </label>
                 <div
                   onDragOver={handleDragOver}
@@ -278,7 +278,7 @@ const App: React.FC = () => {
               ) : (
                 <>
                   <Search className="w-6 h-6" />
-                  <span>🚀 UNLEASH THE AI RESEARCH AGENTS</span>
+                  <span>🚀 LAUNCH RESEARCH ANALYSIS</span>
                 </>
               )}
             </button>
@@ -355,8 +355,8 @@ const App: React.FC = () => {
                       <FileText className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">🎯 RESEARCH KILLERS DETECTED</h2>
-                      <p className="text-gray-700 font-medium">Papers that could destroy your breakthrough</p>
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">🎯 CONTRADICTORY FINDINGS</h2>
+                      <p className="text-gray-700 font-medium">Papers that challenge your research claim</p>
                     </div>
                   </div>
 
@@ -388,8 +388,8 @@ const App: React.FC = () => {
                         <Network className="w-5 h-5 text-white" />
                       </div>
                       <div>
-                        <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">🌊 IMPACT TSUNAMI</h2>
-                        <p className="text-gray-700 font-medium">Citation chains that amplify the damage</p>
+                        <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">🌊 CITATION CASCADES</h2>
+                        <p className="text-gray-700 font-medium">Papers that cite the contradictory findings</p>
                       </div>
                     </div>
 

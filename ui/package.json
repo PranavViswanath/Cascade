@@ -1,7 +1,7 @@
 {
   "name": "research-integrity-network-ui",
   "version": "1.0.0",
-  "description": "Modern UI for Research Integrity Network",
+  "description": "Modern UI for Cascade - AI Research Analysis Platform",
   "main": "index.js",
   "scripts": {
     "dev": "vite",

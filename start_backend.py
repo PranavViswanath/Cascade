@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Startup script for the Research Integrity Network backend server.
+Startup script for the Cascade - AI Research Analysis backend server.
 This script starts the FastAPI backend server that provides the API endpoints
 for the TypeScript frontend to communicate with the AI agents.
 """
@@ -18,7 +18,7 @@ def main():
     os.chdir(script_dir)
     
     # Start the backend server
-    print("🚀 Starting Research Integrity Network Backend Server...")
+    print("🚀 Starting Cascade - AI Research Analysis Backend Server...")
     print("📍 Backend will be available at: http://localhost:8501")
     print("📍 Frontend should be running at: http://localhost:3000")
     print("📝 Make sure you have set up your .env file with PERPLEXITY_API_KEY")

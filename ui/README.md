@@ -1,6 +1,6 @@
-# Research Integrity Network - Modern UI
+# 🌊 Cascade - Modern UI
 
-A beautiful, modern TypeScript React application for the Research Integrity Network with sleek animations and state-of-the-art design. This application provides a modern web interface for analyzing research claims using AI agents.
+A beautiful, modern TypeScript React application for **Cascade** - the AI-powered research analysis platform. This application provides a sleek web interface for analyzing research claims using advanced AI agents.
 
 ## 🎨 Features
 
@@ -100,96 +100,78 @@ research-demo/
 └── .env                      # Environment variables
 ```
 
-## 🎯 User Interface
+## 🎯 **How Cascade Works**
 
-The application features a modern, intuitive interface:
+### **Step 1: Input Your Research**
+- 📄 **Upload PDF** - Drop any research paper
+- ✍️ **Paste Claim** - Type your research hypothesis
 
-### Main Interface
-- **Header**: Clean logo and title with descriptive tagline
-- **Input Selection**: Toggle between "Enter a claim" and "Upload a PDF"
-- **PDF Upload Area**: Drag-and-drop interface with visual feedback
-- **Text Input**: Large textarea for direct claim entry
-- **Analysis Button**: Prominent call-to-action with loading states
+### **Step 2: AI Agent Orchestration**
+1. **Contradiction Detector** - Searches for papers that challenge your findings
+2. **Citation Mapper** - Traces the impact chain of contradictory papers  
+3. **Synthesis Engine** - Generates strategic research recommendations
 
-### Visual Design
-- **Color Scheme**: Blue gradient primary colors with clean whites and grays
-- **Typography**: Modern, readable fonts with proper hierarchy
-- **Spacing**: Generous whitespace for clean, uncluttered appearance
-- **Animations**: Smooth transitions and loading states throughout
+### **Step 3: Strategic Insights**
+- 🎯 **Contradictory Findings** - Papers that challenge your claim
+- 🌊 **Citation Cascades** - How ideas spread through academia
+- ⚡ **Research Directions** - Actionable next steps for your work
 
-## 🎯 Workflow
+## 🎨 **UI Features**
 
-The application provides a streamlined research analysis workflow:
+### **Real-Time Analysis**
+- ⚡ **Instant Results** - Get insights in seconds, not hours
+- 🔄 **Live Updates** - Progressive UI with step-by-step progress
+- 🌐 **Web Integration** - Real-time search via Perplexity API
 
-1. **Input Selection**: Choose between text input or PDF upload
-2. **Claim Entry**: Enter your research claim or upload a PDF document
-3. **Analysis**: Click "🔎 Analyze Research Claim" to start the process
-4. **Step 1 - Text Extraction**: Extract text from PDF (if uploaded)
-5. **Step 2 - Detection**: Beautiful loading spinner while searching for contradictions via Perplexity
-6. **Step 3 - Propagation**: Animated loading while mapping citation cascades
-7. **Step 4 - Synthesis**: Loading animation while formulating research strategy
-8. **Results**: Beautiful cards displaying all findings with smooth animations
+### **Beautiful Interface**
+- 🎨 **Modern UI** - Clean, professional design with gradients
+- 📱 **Responsive** - Works on desktop and mobile
+- ⚡ **Fast Performance** - Optimized for speed and reliability
+- 🎭 **Smooth Animations** - Framer Motion powered transitions
 
-## 🔧 Development
+## 🛠️ **Development**
 
-### Available Scripts
+### **Tech Stack**
+- **Frontend**: React 18, TypeScript, Tailwind CSS, Framer Motion
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS with custom gradients
+- **Animations**: Framer Motion
+- **State Management**: React hooks
 
-- `npm run dev` - Start React development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+### **Key Components**
+- `App.tsx` - Main application component
+- `PaperCard.tsx` - Research paper display component
+- `SynthesisCard.tsx` - Analysis results component
+- `LoadingSpinner.tsx` - Animated loading component
+- `api.ts` - API service layer
 
-### Backend API Endpoints
+## 🚀 **Deployment**
 
-- `POST /detect_contradictions` - Find contradictory research papers
-- `POST /propagate_citations` - Map citation cascades
-- `POST /generate_synthesis` - Generate research strategy
-- `POST /extract_text` - Extract text from PDF files
-
-### Key Technologies
-
-- **React 18** - Modern React with hooks
-- **TypeScript** - Type safety and better DX
-- **Vite** - Fast build tool and dev server
-- **Tailwind CSS** - Utility-first CSS framework
-- **Framer Motion** - Animation library
-- **FastAPI** - Python backend API
-- **Perplexity AI** - Real-time web search and analysis
-
-## 🌐 API Integration
-
-The UI communicates with the Python backend via REST API:
-
-- **Error handling**: Graceful fallbacks for API failures
-- **Loading states**: Beautiful loading animations
-- **Type safety**: Full TypeScript integration
-- **Real-time analysis**: Live web search via Perplexity API
-
-## 🚀 Deployment
-
-For production deployment:
-
+### **Local Development**
 ```bash
-# Build the frontend
-cd ui
-npm run build
-
-# Start the backend server
-python ui/backend_server.py
+npm run dev
 ```
 
-## 🎯 Current Status
+### **Production Build**
+```bash
+npm run build
+```
 
-✅ **Node.js Installation**: Successfully installed and configured  
-✅ **Dependencies**: All React and Python dependencies installed  
-✅ **Development Servers**: Both frontend and backend running  
-✅ **UI Components**: Modern, responsive interface implemented  
-✅ **PDF Upload**: Drag-and-drop functionality working  
-✅ **Text Input**: Direct claim entry supported  
-✅ **Backend API**: FastAPI server with AI agents  
-✅ **Real Analysis**: Perplexity API integration for live web search  
-✅ **Streamlit Removal**: Successfully removed all Streamlit dependencies  
+### **Preview Production Build**
+```bash
+npm run preview
+```
+
+## 📄 **License**
+
+This project is licensed under the MIT License.
 
 ---
 
-**Note**: This modern UI provides a significantly enhanced user experience with beautiful animations, modern design principles, improved usability, and real AI-powered analysis capabilities.
+**Ready to revolutionize your research workflow?** 🚀
+
+**[Get Started Now →](http://localhost:3000)**
+
+---
+
+*Built with ❤️ by researchers, for researchers*

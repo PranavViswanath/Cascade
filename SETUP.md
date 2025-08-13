@@ -1,4 +1,4 @@
-# Research Integrity Network - Setup Guide
+# 🌊 Cascade - Setup Guide
 
 ## 🧹 Project Cleanup Summary
 

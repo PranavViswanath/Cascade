@@ -17,7 +17,7 @@ from agents.severity_assessor import generate_synthesis
 from PyPDF2 import PdfReader
 import io
 
-app = FastAPI(title="Research Integrity Network API", version="1.0.0")
+app = FastAPI(title="Cascade - AI Research Analysis API", version="1.0.0")
 
 # Add CORS middleware to allow requests from the React frontend
 app.add_middleware(
@@ -63,7 +63,7 @@ class AnalyzeResponse(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "Research Integrity Network API is running"}
+    return {"message": "Cascade - AI Research Analysis API is running"}
 
 @app.post("/extract_text", response_model=TextExtractionResponse)
 async def extract_text_from_pdf(file: UploadFile = File(...)):

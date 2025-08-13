@@ -1,115 +1,59 @@
-# 🌊 Cascade - AI Research Analysis
+# Cascade - AI Research Analysis
 
 > **New finding just dropped? Find out what it means for your research team in seconds**
 
-[![Cascade Demo](https://img.shields.io/badge/Demo-Live%20Preview-blue?style=for-the-badge&logo=react)](http://localhost:3000)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg?style=for-the-badge&logo=python)](https://python.org)
 [![React](https://img.shields.io/badge/React-18+-blue.svg?style=for-the-badge&logo=react)](https://reactjs.org)
 
 ---
 
-## 🚀 **What is Cascade?**
+## Overview
 
-**Cascade** is an AI-powered research analysis platform that instantly maps the impact chain of your research claims. Upload a paper or paste a claim, and watch as our AI agents orchestrate to:
+Cascade is an AI-powered research analysis platform that helps researchers validate claims by detecting contradictions, mapping citation cascades, and generating strategic insights. Upload a research paper or paste a claim, and the system will:
 
-- 🔍 **Detect Contradictions** - Find papers that challenge your findings
-- 🌊 **Map Citation Cascades** - Trace how ideas ripple through academia  
-- ⚡ **Generate Strategic Insights** - Get actionable research directions
+1. **Detect Contradictions** - Find papers that challenge your findings
+2. **Map Citation Cascades** - Trace how ideas spread through academia  
+3. **Generate Strategic Insights** - Provide actionable research directions
 
-**Powered by NVIDIA NeMo** and real-time Perplexity API integration.
-
----
-
-## 🎯 **Why Cascade?**
-
-### **For Researchers**
-- **Instant Validation** - Know within seconds if your breakthrough has been debunked
-- **Citation Intelligence** - See exactly who's building on (or contradicting) your work
-- **Strategic Planning** - Get clear next steps for your research direction
-
-### **For Research Teams**
-- **Collaborative Analysis** - Share findings and get team-wide insights
-- **Literature Review** - Automate the tedious process of finding related work
-- **Impact Assessment** - Understand the broader implications of your research
-
-### **For Academic Institutions**
-- **Quality Assurance** - Ensure research claims are thoroughly vetted
-- **Resource Optimization** - Focus research efforts on high-impact areas
-- **Knowledge Synthesis** - Bridge gaps between different research domains
+Powered by NVIDIA NeMo and real-time Perplexity API integration.
 
 ---
 
-## 🛠️ **Quick Start**
+## Problem
 
-### **1. Clone & Setup**
-```bash
-git clone <repository-url>
-cd research-demo
-pip install -r requirements.txt
-```
+Research validation is time-consuming and often incomplete. Researchers need to:
+- Manually search for contradictory findings
+- Trace citation networks to understand impact
+- Synthesize insights across multiple papers
+- Stay current with rapidly evolving fields
 
-### **2. Configure API**
-```bash
-cp env.example .env
-# Add your Perplexity API key to .env
-# Get free key: https://www.perplexity.ai/settings/api
-```
-
-### **3. Launch Cascade**
-```bash
-# Terminal 1: Start backend
-python ui/backend_server.py
-
-# Terminal 2: Start frontend  
-cd ui
-npm install
-npm run dev
-```
-
-### **4. Experience the Magic**
-Open `http://localhost:3000` and upload your research paper or paste a claim!
+Traditional literature review methods are slow, subjective, and miss important connections.
 
 ---
 
-## 🔬 **How It Works**
+## Solution
 
-### **Step 1: Input Your Research**
-- 📄 **Upload PDF** - Drop any research paper
-- ✍️ **Paste Claim** - Type your research hypothesis
+Cascade automates research validation through a three-stage AI agent system:
 
-### **Step 2: AI Agent Orchestration**
-1. **Contradiction Detector** - Searches for papers that challenge your findings
-2. **Citation Mapper** - Traces the impact chain of contradictory papers  
-3. **Synthesis Engine** - Generates strategic research recommendations
+### Stage 1: Contradiction Detection
+- Analyzes your research claim using Perplexity API
+- Identifies papers that directly contradict your findings
+- Extracts key excerpts and reasoning
 
-### **Step 3: Strategic Insights**
-- 🎯 **Contradictory Findings** - Papers that challenge your claim
-- 🌊 **Citation Cascades** - How ideas spread through academia
-- ⚡ **Research Directions** - Actionable next steps for your work
+### Stage 2: Citation Mapping  
+- For each contradictory paper, finds papers that cite it
+- Maps the impact chain through academia
+- Identifies research trends and directions
 
----
-
-## 🎨 **Features**
-
-### **Real-Time Analysis**
-- ⚡ **Instant Results** - Get insights in seconds, not hours
-- 🔄 **Live Updates** - Progressive UI with step-by-step progress
-- 🌐 **Web Integration** - Real-time search via Perplexity API
-
-### **Advanced AI Agents**
-- 🤖 **Modular Architecture** - Specialized agents for each analysis step
-- 🧠 **NVIDIA NeMo Powered** - State-of-the-art AI orchestration
-- 📊 **Citation Intelligence** - Deep understanding of academic networks
-
-### **Beautiful Interface**
-- 🎨 **Modern UI** - Clean, professional design
-- 📱 **Responsive** - Works on desktop and mobile
-- ⚡ **Fast Performance** - Optimized for speed and reliability
+### Stage 3: Strategic Synthesis
+- Combines contradiction and citation data
+- Generates actionable research recommendations
+- Highlights gaps and opportunities
 
 ---
 
-## 🏗️ **Architecture**
+## Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -124,7 +68,7 @@ Open `http://localhost:3000` and upload your research paper or paste a claim!
     └─────────┘            └─────────┘            └─────────┘
 ```
 
-### **Tech Stack**
+### Tech Stack
 - **Frontend**: React 18, TypeScript, Tailwind CSS, Framer Motion
 - **Backend**: FastAPI, Python 3.8+, Uvicorn
 - **AI**: Perplexity API, NVIDIA NeMo integration
@@ -132,73 +76,112 @@ Open `http://localhost:3000` and upload your research paper or paste a claim!
 
 ---
 
-## 🚀 **Deployment**
+## Quick Start
 
-### **Local Development**
-```bash
-# Backend
-python ui/backend_server.py
+### Prerequisites
+- Python 3.8+ with virtual environment
+- Node.js 18+
+- Perplexity API Key ([get here](https://www.perplexity.ai/settings/api))
 
-# Frontend  
-cd ui && npm run dev
-```
+### Installation
 
-### **Production Ready**
-- ✅ **Docker Support** - Containerized deployment
-- ✅ **Cloud Compatible** - Works on AWS, GCP, Azure
-- ✅ **Scalable** - Handles multiple concurrent users
+1. **Clone and setup**:
+   ```bash
+   git clone <repository-url>
+   cd research-demo
+   pip install -r requirements.txt
+   ```
+
+2. **Configure API**:
+   ```bash
+   cp env.example .env
+   # Add your Perplexity API key to .env
+   ```
+
+3. **Launch**:
+   ```bash
+   # Terminal 1: Start backend
+   python ui/backend_server.py
+
+   # Terminal 2: Start frontend  
+   cd ui
+   npm install
+   npm run dev
+   ```
+
+4. **Access**: Open `http://localhost:3000`
 
 ---
 
-## 🤝 **Contributing**
+## API Endpoints
 
-We welcome contributions! Here's how to get started:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### **Development Guidelines**
-- 🧪 **Test Everything** - Ensure all features work correctly
-- 📝 **Document Changes** - Update docs for new features
-- 🎨 **Follow Style** - Maintain consistent code formatting
+- `POST /extract_text` - Extract text from PDF files
+- `POST /detect_contradictions` - Find contradictory research papers
+- `POST /propagate_citations` - Map citation cascades
+- `POST /generate_synthesis` - Generate research strategy
 
 ---
 
-## 📄 **License**
+## Features
+
+### Real-Time Analysis
+- Instant results via Perplexity API
+- Progressive UI with step-by-step updates
+- Live web search integration
+
+### AI Agents
+- Modular architecture with specialized agents
+- NVIDIA NeMo orchestration
+- Citation intelligence and network analysis
+
+### User Interface
+- PDF upload with drag-and-drop
+- Text input for direct claims
+- Responsive design for all devices
+
+---
+
+## Use Cases
+
+### For Researchers
+- Validate breakthrough claims before publication
+- Identify gaps in existing research
+- Understand citation impact of findings
+
+### For Research Teams
+- Collaborative literature review
+- Automated contradiction detection
+- Strategic research planning
+
+### For Academic Institutions
+- Quality assurance for research claims
+- Resource optimization for high-impact areas
+- Knowledge synthesis across domains
+
+---
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 **Acknowledgments**
+## Acknowledgments
 
-- **NVIDIA NeMo** - For powerful AI orchestration capabilities
-- **Perplexity AI** - For real-time research search and analysis
-- **Open Source Community** - For the amazing tools that make this possible
-
----
-
-## 📞 **Support**
-
-- 🐛 **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/your-repo/discussions)
-- 📧 **Email**: [your-email@domain.com]
+- **NVIDIA NeMo** - AI orchestration capabilities
+- **Perplexity AI** - Real-time research search and analysis
+- **Open Source Community** - Tools and libraries
 
 ---
 
-## ⭐ **Star History**
-
-[![Star History Chart](https://api.star-history.com/svg?repos=your-username/your-repo&type=Date)](https://star-history.com/#your-username/your-repo&Date)
-
----
-
-**Ready to revolutionize your research workflow?** 🚀
-
-**[Get Started Now →](http://localhost:3000)**
-
----
-
-*Built with ❤️ by researchers, for researchers*
+*Built by researchers, for researchers*

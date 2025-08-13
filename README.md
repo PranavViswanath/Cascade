@@ -1,3 +1,4 @@
+![image](https://github.com/user-attachments/assets/f571398a-0609-423a-9423-272a28fde995)
 # Cascade - AI Research Analysis
 
 > **New finding just dropped? Find out what it means for your research team in seconds**
